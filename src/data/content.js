@@ -1,3 +1,7 @@
+import { CHINESE_CURRICULUM } from './chinese.js'
+import { MATH_CURRICULUM }   from './math.js'
+import { ENGLISH_CURRICULUM } from './english.js'
+
 export const GRADES = ['一年级','二年级','三年级','四年级','五年级','六年级']
 export const SEMESTERS = ['上学期','下学期']
 
@@ -50,92 +54,9 @@ export const SUBJECTS = {
 }
 
 export const CURRICULUM = {
-  chinese: {
-    '三年级': { '上学期': { units: [
-      { id:'u1', title:'第一单元', theme:'学校生活', progress:100,
-        lessons:[
-          {id:'l1',title:'大青树下的小学',type:'prose',pages:'2-5',done:true},
-          {id:'l2',title:'花的学校',type:'poem',pages:'6-9',done:true},
-          {id:'l3',title:'不懂就要问',type:'prose',pages:'10-13',done:true},
-        ], review:'语文园地一', keySkills:['积累词语','感受校园','提问策略'] },
-      { id:'u2', title:'第二单元', theme:'金秋时节', progress:75,
-        lessons:[
-          {id:'l4',title:'古诗三首',type:'poetry',pages:'16-20',done:true},
-          {id:'l5',title:'铺满金色巴掌的水泥道',type:'prose',pages:'21-24',done:true},
-          {id:'l6',title:'秋天的雨',type:'prose',pages:'25-29',done:true},
-          {id:'l7',title:'听听秋的声音',type:'poem',pages:'30-32',done:false},
-        ], review:'语文园地二', keySkills:['描写秋天','感受自然','积累佳句'] },
-      { id:'u3', title:'第三单元', theme:'童话世界', progress:25,
-        lessons:[
-          {id:'l8',title:'去年的树',type:'fairy_tale',pages:'36-39',done:true},
-          {id:'l9',title:'那一定会很好',type:'fairy_tale',pages:'40-43',done:false},
-          {id:'l10',title:'在牛肚子里旅行',type:'fairy_tale',pages:'44-49',done:false},
-          {id:'l11',title:'一块奶酪',type:'fairy_tale',pages:'50-54',done:false},
-        ], review:'语文园地三', keySkills:['童话阅读','想象创作','感悟道理'] },
-      { id:'u4', title:'第四单元', theme:'预测策略', progress:0,
-        lessons:[
-          {id:'l12',title:'总也倒不了的老屋',type:'prose',pages:'58-63',done:false},
-          {id:'l13',title:'胡萝卜先生的长胡子',type:'prose',pages:'64-66',done:false},
-          {id:'l14',title:'不会叫的狗',type:'fiction',pages:'67-71',done:false},
-        ], review:'语文园地四', keySkills:['边读边猜','联系上下文','预测策略'] },
-    ]}}
-  },
-  math: {
-    '三年级': { '上学期': { units: [
-      { id:'u1', title:'第一单元', theme:'混合运算', progress:100,
-        lessons:[
-          {id:'l1',title:'小熊购物',type:'lesson',pages:'2-4',done:true},
-          {id:'l2',title:'买文具',type:'lesson',pages:'5-7',done:true},
-          {id:'l3',title:'练习一',type:'practice',pages:'8-9',done:true},
-        ], review:'单元复习', keySkills:['先乘除后加减','括号运算','混合运算顺序'] },
-      { id:'u2', title:'第二单元', theme:'观察物体', progress:100,
-        lessons:[
-          {id:'l4',title:'搭积木',type:'lesson',pages:'12-14',done:true},
-          {id:'l5',title:'练习二',type:'practice',pages:'15-16',done:true},
-        ], review:'单元复习', keySkills:['三视图','空间想象','从不同角度观察'] },
-      { id:'u3', title:'第三单元', theme:'加与减', progress:50,
-        lessons:[
-          {id:'l6',title:'捐书活动',type:'lesson',pages:'18-20',done:true},
-          {id:'l7',title:'运白菜',type:'lesson',pages:'21-23',done:true},
-          {id:'l8',title:'节约用水',type:'lesson',pages:'24-26',done:false},
-          {id:'l9',title:'练习三',type:'practice',pages:'27-28',done:false},
-        ], review:'单元复习', keySkills:['三位数加减','估算','解决问题'] },
-      { id:'u4', title:'第四单元', theme:'乘与除', progress:0,
-        lessons:[
-          {id:'l10',title:'派送报纸',type:'lesson',pages:'30-32',done:false},
-          {id:'l11',title:'需要几个轮子',type:'lesson',pages:'33-35',done:false},
-          {id:'l12',title:'练习四',type:'practice',pages:'36-37',done:false},
-        ], review:'单元复习', keySkills:['两位数乘一位数','除法','乘除关系'] },
-    ]}}
-  },
-  english: {
-    '三年级': { '上学期': { units: [
-      { id:'u1', title:'Unit 1', theme:'Hello', progress:100,
-        lessons:[
-          {id:'l1',title:"Let's learn: Greetings",type:'lesson',pages:'2-3',done:true},
-          {id:'l2',title:"Let's talk: Nice to meet you",type:'lesson',pages:'4-5',done:true},
-          {id:'l3',title:"Let's read & write",type:'lesson',pages:'6',done:true},
-        ], review:'Recycle 1', keySkills:['Greetings','Self-introduction','Numbers 1-5'] },
-      { id:'u2', title:'Unit 2', theme:'My Family', progress:67,
-        lessons:[
-          {id:'l4',title:"Let's learn: Family members",type:'lesson',pages:'14-15',done:true},
-          {id:'l5',title:"Let's talk: This is my...",type:'lesson',pages:'16-17',done:true},
-          {id:'l6',title:"Let's read & write",type:'lesson',pages:'18',done:false},
-        ], review:'Recycle 2', keySkills:['Family words','Possessives','Descriptions'] },
-      { id:'u3', title:'Unit 3', theme:'At the Zoo', progress:33,
-        lessons:[
-          {id:'l7',title:"Let's learn: Animals",type:'lesson',pages:'26-27',done:true},
-          {id:'l8',title:"Let's talk: What's that?",type:'lesson',pages:'28-29',done:false},
-          {id:'l9',title:"Let's read & write",type:'lesson',pages:'30',done:false},
-        ], review:'Recycle 3', keySkills:['Animal names','Colors','Numbers 1-20'] },
-      { id:'u4', title:'Unit 4', theme:'My Home', progress:0,
-        lessons:[
-          {id:'l10',title:"Let's learn: Rooms",type:'lesson',pages:'38-39',done:false},
-          {id:'l11',title:"Let's talk: Where is...?",type:'lesson',pages:'40-41',done:false},
-          {id:'l12',title:"Let's read & write",type:'lesson',pages:'42',done:false},
-        ], review:'Recycle 4', keySkills:['Room names','Prepositions','Furniture'] },
-    ]}}
-  }
+  chinese: CHINESE_CURRICULUM,
+  math:    MATH_CURRICULUM,
+  english: ENGLISH_CURRICULUM,
 }
 
 export const QUESTIONS = {
