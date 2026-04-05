@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Dashboard  from './components/Dashboard.jsx'
 import SubjectHome from './components/SubjectHome.jsx'
+import LessonView  from './components/LessonView.jsx'
 import TestConfig  from './components/TestConfig.jsx'
 import TestSession from './components/TestSession.jsx'
 import Results     from './components/Results.jsx'
@@ -33,12 +34,13 @@ export default function App() {
   }
 
   const views = {
-    dashboard:  <Dashboard   state={state} navigate={navigate} />,
-    subject:    <SubjectHome state={state} navigate={navigate} />,
+    dashboard:    <Dashboard   state={state} navigate={navigate} />,
+    subject:      <SubjectHome state={state} navigate={navigate} />,
+    'lesson-view': <LessonView state={state} navigate={navigate} />,
     'test-config': <TestConfig state={state} navigate={navigate} />,
-    test:       <TestSession state={state} navigate={navigate} />,
-    results:    <Results     state={state} navigate={navigate} />,
-    print:      <PrintView   state={state} navigate={navigate} />,
+    test:         <TestSession state={state} navigate={navigate} />,
+    results:      <Results     state={state} navigate={navigate} />,
+    print:        <PrintView   state={state} navigate={navigate} />,
   }
 
   return views[state.screen] || views['dashboard']
