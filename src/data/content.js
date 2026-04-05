@@ -1,6 +1,9 @@
 import { CHINESE_CURRICULUM } from './chinese.js'
 import { MATH_CURRICULUM }   from './math.js'
 import { ENGLISH_CURRICULUM } from './english.js'
+import { CHINESE_QUESTIONS }  from './questions-chinese.js'
+import { MATH_QUESTIONS }     from './questions-math.js'
+import { ENGLISH_QUESTIONS }  from './questions-english.js'
 
 export const GRADES = ['一年级','二年级','三年级','四年级','五年级','六年级']
 export const SEMESTERS = ['上学期','下学期']
@@ -59,6 +62,21 @@ export const CURRICULUM = {
   english: ENGLISH_CURRICULUM,
 }
 
+// QUESTION_BANK: grade-indexed questions for all subjects
+export const QUESTION_BANK = {
+  chinese: CHINESE_QUESTIONS,
+  math:    MATH_QUESTIONS,
+  english: ENGLISH_QUESTIONS,
+}
+
+// Helper: get questions filtered by grade (and optionally type)
+export function getQuestions(subjectId, grade, type = null) {
+  const gradeBank = QUESTION_BANK[subjectId]?.[grade] || []
+  if (!type) return gradeBank
+  return gradeBank.filter(q => q.type === type)
+}
+
+// Legacy flat array for backward compat (used by RecallQuiz in LessonView)
 export const QUESTIONS = {
   chinese: [
     { id:'c1', type:'pinyin', difficulty:1, unit:'u1', lesson:'l1',

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { SUBJECTS, CURRICULUM, TEST_TYPES, QUESTIONS } from '../data/content'
+import { SUBJECTS, CURRICULUM, TEST_TYPES, QUESTIONS, QUESTION_BANK } from '../data/content'
 
 export default function TestConfig({ state, navigate }) {
   const { subject: subId, grade, semester, testConfig: initConfig } = state
@@ -22,16 +22,13 @@ export default function TestConfig({ state, navigate }) {
   const toggleQType = id => setQTypes(prev => prev.includes(id) ? prev.filter(x=>x!==id) : [...prev,id])
 
   const buildTest = () => {
-    const pool = QUESTIONS[subId] || []
+    // Use grade-specific bank first, fall back to legacy pool
+    const gradePool = QUESTION_BANK[subId]?.[grade] || []
+    const legacyPool = QUESTIONS[subId] || []
+    const pool = gradePool.length ? gradePool : legacyPool
     let questions = []
 
-    if (scope === 'lesson') {
-      questions = pool.filter(q => q.lesson === lessonId)
-    } else if (scope === 'unit') {
-      const unit = units.find(u=>u.id===unitId)
-      const lessonIds = unit?.lessons.map(l=>l.id) || []
-      questions = pool.filter(q => lessonIds.includes(q.lesson))
-    } else if (scope === 'custom' && qTypes.length) {
+    if (scope === 'custom' && qTypes.length) {
       questions = pool.filter(q => qTypes.includes(q.type))
     } else {
       questions = [...pool]
@@ -41,11 +38,12 @@ export default function TestConfig({ state, navigate }) {
       const d = {easy:1, medium:2, hard:3}[difficulty]
       questions = questions.filter(q => q.difficulty === d)
     }
-    if (!questions.length) questions = pool.slice(0, qCount)
-    questions = questions.slice(0, qCount)
+    if (!questions.length) questions = [...pool]
+    // shuffle
+    questions = questions.sort(() => Math.random() - 0.5).slice(0, qCount)
     if (questions.length < qCount) {
-      // pad with all pool items shuffled
-      const extra = [...pool].sort(()=>Math.random()-.5).filter(q=>!questions.find(x=>x.id===q.id))
+      // pad from legacy pool to reach count
+      const extra = [...legacyPool].sort(()=>Math.random()-.5).filter(q=>!questions.find(x=>x.id===q.id))
       questions = [...questions, ...extra].slice(0, qCount)
     }
 

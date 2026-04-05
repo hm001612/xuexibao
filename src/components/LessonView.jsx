@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { SUBJECTS, CURRICULUM, LESSON_TYPES, QUESTIONS } from '../data/content'
+import { SUBJECTS, CURRICULUM, LESSON_TYPES, QUESTIONS, QUESTION_BANK } from '../data/content'
 
 // ─── Lesson type config ──────────────────────────────────────────────────────
 const LESSON_KNOWLEDGE = {
@@ -19,28 +19,126 @@ const LESSON_KNOWLEDGE = {
 // ─── Data helpers ────────────────────────────────────────────────────────────
 function getLK(type) { return LESSON_KNOWLEDGE[type] || LESSON_KNOWLEDGE['prose'] }
 
-function getVocab(subId) {
-  const map = {
-    chinese: [
+// Grade-specific vocab for each subject
+const GRADE_VOCAB = {
+  chinese: {
+    '一年级': [
+      { word: '学校', pinyin: 'xuéxiào', meaning: '学生读书学习的地方' },
+      { word: '老师', pinyin: 'lǎoshī',  meaning: '教书育人的人' },
+      { word: '朋友', pinyin: 'péngyou', meaning: '要好的人，知己' },
+      { word: '快乐', pinyin: 'kuàilè',  meaning: '感到高兴，幸福' },
+    ],
+    '二年级': [
+      { word: '认真', pinyin: 'rènzhēn', meaning: '专心诚恳，不马虎' },
+      { word: '勇敢', pinyin: 'yǒnggǎn', meaning: '有胆量，不怕危险' },
+      { word: '美丽', pinyin: 'měilì',   meaning: '好看，漂亮' },
+      { word: '希望', pinyin: 'xīwàng',  meaning: '心里想达到某种目的或出现某种情况' },
+    ],
+    '三年级': [
       { word: '积累', pinyin: 'jī lěi',   meaning: '逐渐聚集增多' },
       { word: '品味', pinyin: 'pǐn wèi',  meaning: '仔细体会，欣赏' },
       { word: '感悟', pinyin: 'gǎn wù',   meaning: '有所感触而领悟' },
-      { word: '描绘', pinyin: 'miáo huì', meaning: '用语言或画笔表现' },
+      { word: '描绘', pinyin: 'miáo huì', meaning: '用语言或画笔表现出来' },
     ],
-    math: [
-      { word: '运算', pinyin: 'yùn suàn',  meaning: '按一定规则进行计算' },
-      { word: '估算', pinyin: 'gū suàn',   meaning: '大致估计计算结果' },
-      { word: '验证', pinyin: 'yàn zhèng', meaning: '用实例来检验' },
-      { word: '规律', pinyin: 'guī lǜ',    meaning: '事物内在联系的规律' },
+    '四年级': [
+      { word: '壮观', pinyin: 'zhuàngguān', meaning: '雄伟而美观的景象' },
+      { word: '启示', pinyin: 'qǐshì',     meaning: '启发指示，使人有所领悟' },
+      { word: '联想', pinyin: 'liánxiǎng', meaning: '由一事物想到另一事物的思维活动' },
+      { word: '珍贵', pinyin: 'zhēnguì',   meaning: '价值高，意义深远' },
     ],
-    english: [
-      { word: 'vocabulary', pinyin: '', meaning: '词汇；词语' },
-      { word: 'grammar',    pinyin: '', meaning: '语法；文法' },
-      { word: 'dialogue',   pinyin: '', meaning: '对话；会话' },
-      { word: 'expression', pinyin: '', meaning: '表达；句型' },
+    '五年级': [
+      { word: '坚韧', pinyin: 'jiānrèn',   meaning: '坚强而有韧性，不轻易屈服' },
+      { word: '奉献', pinyin: 'fèngxiàn',  meaning: '恭敬地献出，贡献给' },
+      { word: '豁达', pinyin: 'huòdá',     meaning: '性格开朗，心胸宽广' },
+      { word: '缅怀', pinyin: 'miǎnhuái',  meaning: '回想过去，表示追念' },
     ],
-  }
-  return (map[subId] || map['chinese'])
+    '六年级': [
+      { word: '渺小', pinyin: 'miǎoxiǎo',  meaning: '非常微小，不值一提' },
+      { word: '沧桑', pinyin: 'cāngsāng',  meaning: '比喻世事变化很大' },
+      { word: '瞻仰', pinyin: 'zhānyǎng',  meaning: '恭敬地看' },
+      { word: '精湛', pinyin: 'jīngzhàn',  meaning: '精深，高超' },
+    ],
+  },
+  math: {
+    '一年级': [
+      { word: '比较', pinyin: 'bǐjiào',  meaning: '对照两种或以上的事物辨别异同' },
+      { word: '相同', pinyin: 'xiāngtóng', meaning: '没有差别，一样' },
+      { word: '多少', pinyin: 'duōshǎo', meaning: '数量的多与少' },
+      { word: '顺序', pinyin: 'shùnxù',  meaning: '按规律排列的次序' },
+    ],
+    '二年级': [
+      { word: '乘法', pinyin: 'chéngfǎ', meaning: '数学运算，表示几个相同数相加' },
+      { word: '口诀', pinyin: 'kǒujué',  meaning: '便于记忆的简短规律性文字' },
+      { word: '倍数', pinyin: 'bèishù',  meaning: '一个数是另一个数的整数倍' },
+      { word: '对称', pinyin: 'duìchèn', meaning: '两边完全相同，互相配合' },
+    ],
+    '三年级': [
+      { word: '运算', pinyin: 'yùnsuàn', meaning: '按照一定规则进行计算' },
+      { word: '估算', pinyin: 'gūsuàn',  meaning: '大致估计计算结果' },
+      { word: '面积', pinyin: 'miànjī',  meaning: '平面图形或物体表面的大小' },
+      { word: '周长', pinyin: 'zhōucháng', meaning: '围绕图形一圈的长度总和' },
+    ],
+    '四年级': [
+      { word: '运算律', pinyin: 'yùnsuànlǜ', meaning: '数学运算中的基本规律' },
+      { word: '平行', pinyin: 'pínghéng',   meaning: '两直线在同一平面内不相交' },
+      { word: '垂直', pinyin: 'chuízhí',    meaning: '两直线相交成直角' },
+      { word: '统计', pinyin: 'tǒngjì',     meaning: '收集整理和分析数据' },
+    ],
+    '五年级': [
+      { word: '因数', pinyin: 'yīnshù',  meaning: '能整除某数的数叫该数的因数' },
+      { word: '公倍数', pinyin: 'gōngbèishù', meaning: '两数共同的倍数' },
+      { word: '通分', pinyin: 'tōngfēn', meaning: '把分母不同的分数化成同分母分数' },
+      { word: '倒数', pinyin: 'dàoshù',  meaning: '两个数乘积为1，互为倒数' },
+    ],
+    '六年级': [
+      { word: '百分数', pinyin: 'bǎifēnshù', meaning: '表示一个数是另一个数的百分之几' },
+      { word: '比例', pinyin: 'bǐlì',     meaning: '两个比相等叫比例' },
+      { word: '正比例', pinyin: 'zhèngbǐlì', meaning: '两量之比为固定常数，同增同减' },
+      { word: '圆周率', pinyin: 'yuánzhōulǜ', meaning: '圆的周长与直径之比，约等于3.14' },
+    ],
+  },
+  english: {
+    '一年级': [
+      { word: 'hello', pinyin: '', meaning: '你好（打招呼）' },
+      { word: 'red',   pinyin: '', meaning: '红色' },
+      { word: 'cat',   pinyin: '', meaning: '猫' },
+      { word: 'one',   pinyin: '', meaning: '一（数字1）' },
+    ],
+    '二年级': [
+      { word: 'pen',   pinyin: '', meaning: '钢笔，笔' },
+      { word: 'desk',  pinyin: '', meaning: '书桌' },
+      { word: 'tall',  pinyin: '', meaning: '高的（身高）' },
+      { word: 'happy', pinyin: '', meaning: '高兴的，快乐的' },
+    ],
+    '三年级': [
+      { word: 'family',  pinyin: '', meaning: '家庭，家人' },
+      { word: 'colour',  pinyin: '', meaning: '颜色' },
+      { word: 'animal',  pinyin: '', meaning: '动物' },
+      { word: 'like',    pinyin: '', meaning: '喜欢；像' },
+    ],
+    '四年级': [
+      { word: 'classroom', pinyin: '', meaning: '教室' },
+      { word: 'weather',   pinyin: '', meaning: '天气' },
+      { word: 'season',    pinyin: '', meaning: '季节' },
+      { word: 'occupation', pinyin: '', meaning: '职业，工作' },
+    ],
+    '五年级': [
+      { word: 'personality', pinyin: '', meaning: '性格，个性' },
+      { word: 'subject',     pinyin: '', meaning: '科目，学科' },
+      { word: 'ability',     pinyin: '', meaning: '能力，才能' },
+      { word: 'past tense',  pinyin: '', meaning: '过去时（语法）' },
+    ],
+    '六年级': [
+      { word: 'comparative', pinyin: '', meaning: '比较级（语法）' },
+      { word: 'environment', pinyin: '', meaning: '环境' },
+      { word: 'dream',       pinyin: '', meaning: '梦想；梦' },
+      { word: 'graduate',    pinyin: '', meaning: '毕业；毕业生' },
+    ],
+  },
+}
+
+function getVocab(subId, grade) {
+  return GRADE_VOCAB[subId]?.[grade] || GRADE_VOCAB[subId]?.['三年级'] || []
 }
 
 // ─── Preview-specific content ─────────────────────────────────────────────────
@@ -254,8 +352,13 @@ function SkillTag({ skill, color, light }) {
 }
 
 // ─── Mini recall quiz (review only) ──────────────────────────────────────────
-function RecallQuiz({ subId, sub }) {
-  const questions = QUESTIONS[subId]?.slice(0, 2) || []
+function RecallQuiz({ subId, sub, grade }) {
+  // Prefer grade-specific bank; fall back to legacy pool
+  const gradeBank = QUESTION_BANK[subId]?.[grade] || []
+  const legacyPool = QUESTIONS[subId] || []
+  const pool = gradeBank.length ? gradeBank : legacyPool
+  // pick choice/judge questions for quick quiz
+  const questions = pool.filter(q => q.type === 'choice' || q.type === 'judge').slice(0, 2)
   const [answers, setAnswers] = useState({})
   const [revealed, setRevealed] = useState({})
 
@@ -341,7 +444,7 @@ export default function LessonView({ state, navigate }) {
   if (!sub || !lesson || !unit) return null
 
   const lk        = getLK(lesson.type)
-  const vocab     = getVocab(subId)
+  const vocab     = getVocab(subId, grade)
   const goals     = isReview ? getReviewChecklist(subId, lesson, grade) : getPreviewGoals(subId, lesson, grade)
   const exercises = isReview ? getReviewExercises(subId, lesson) : getPreviewExercises(subId, lesson)
   const pitfalls  = getReviewPitfalls(subId, lesson)
@@ -547,7 +650,7 @@ export default function LessonView({ state, navigate }) {
           {/* ── REVIEW ONLY: Mini quiz ── */}
           {isReview && (
             <Card title="快速自测" icon="🧪">
-              <RecallQuiz subId={subId} sub={sub} />
+              <RecallQuiz subId={subId} sub={sub} grade={grade} />
             </Card>
           )}
 
